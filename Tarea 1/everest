@@ -37,4 +37,17 @@ function memory {
 }
 
 
+function newtcrk {
+	IFS=$'\n'	
+	NET=($(lspci | egrep -i 'network|ethernet'))
+	unset IFS
+	
+	echo "newtcrk"
+	for n in "${NET[@]}"
+	do 
+		echo ${n##*:}
+		
+	done
+}
 
+newtcrk
