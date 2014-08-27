@@ -50,4 +50,13 @@ function newtcrk {
 	done
 }
 
-newtcrk
+function os {
+	OS=$(uname)
+	KERNEL=$(uname -r)
+	
+	echo -e "Sistema Operativo:\t" $OS
+	echo -e "Version de Kernel:\t" $KERNEL
+}
+ os
+
+
