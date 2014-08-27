@@ -1,0 +1,28 @@
+#!/bin/bash
+
+function processor {
+	MODEL=$(cat /proc/cpuinfo | grep "model name" | sort -u | cut -d: -f2)
+	N_NUMBER=$(cat /proc/cpuinfo | grep "siblings" | sort -u | cut -d: -f2)
+	CACHE=$(cat /proc/cpuinfo | grep "cache size" | sort -u | cut -d: -f2)
+	ARCHITECTURE=$(uname -m)
+	VIRTUALIZATION='No'
+	if grep "vmx" /proc/cpuinfo > /dev/null
+	then
+		VIRTUALIZATION='Yes'
+	fi
+	if grep "svm" /proc/cpuinfo > /dev/null
+	then
+		VIRTUALIZATION='Yes'
+	fi
+	
+	echo processor
+	echo Modelo: $MODEL
+	echo Número de Núcleos: $N_NUMBER
+	echo Memoria caché: $CACHE
+	echo Arquitectura del procesador: $ARCHITECTURE 
+	echo ¿Soporta Virtualización: $VIRTUALIZATION
+}
+
+
+
+processor
