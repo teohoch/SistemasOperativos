@@ -16,13 +16,25 @@ function processor {
 	fi
 	
 	echo processor
-	echo Modelo: $MODEL
-	echo Número de Núcleos: $N_NUMBER
-	echo Memoria caché: $CACHE
-	echo Arquitectura del procesador: $ARCHITECTURE 
-	echo ¿Soporta Virtualización: $VIRTUALIZATION
+	echo -e "Modelo:\t"$MODEL
+	echo -e "Número de Núcleos:\t"$N_NUMBER
+	echo -e "Memoria caché:\t"$CACHE
+	echo -e "Arquitectura del procesador:\t"$ARCHITECTURE 
+	echo -e "¿Soporta Virtualización:\t"$VIRTUALIZATION
+}
+
+function memory {
+	RAM=$(grep "MemTotal" /proc/meminfo | cut -d: -f2)
+	SWAP=$(grep "SwapTotal" /proc/meminfo | cut -d: -f2)
+	FREE_RAM=$(grep "MemFree" /proc/meminfo | cut -d: -f2)
+	FREE_SWAP=$(grep "SwapFree" /proc/meminfo | cut -d: -f2)
+	
+	echo memory
+	echo -e "Memoria Total:\t"$RAM
+	echo -e "Swap Total:\t"$SWAP
+	echo -e "Memoria Libre:\t"$FREE_RAM
+	echo -e "Swap Libre:\t"$FREE_SWAP
 }
 
 
 
-processor
