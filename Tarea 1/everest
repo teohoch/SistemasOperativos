@@ -49,6 +49,13 @@ function newtcrk {
 		
 	done
 }
+function storage {
+	
+}
+
+function vga {
+	
+}
 
 function os {
 	OS=$(uname)
