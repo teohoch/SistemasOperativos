@@ -21,6 +21,7 @@ function processor {
 	echo -e "Memoria caché:\t"$CACHE
 	echo -e "Arquitectura del procesador:\t"$ARCHITECTURE 
 	echo -e "¿Soporta Virtualización:\t"$VIRTUALIZATION
+	echo ""
 }
 
 function memory {
@@ -34,6 +35,7 @@ function memory {
 	echo -e "Swap Total:\t"$SWAP
 	echo -e "Memoria Libre:\t"$FREE_RAM
 	echo -e "Swap Libre:\t"$FREE_SWAP
+	echo ""
 }
 
 
@@ -48,22 +50,41 @@ function newtcrk {
 		echo ${n##*:}
 		
 	done
-}
-function storage {
-	
-}
-
-function vga {
-	
+	echo ""
 }
 
 function os {
+	echo "os"
 	OS=$(uname)
 	KERNEL=$(uname -r)
 	
 	echo -e "Sistema Operativo:\t" $OS
 	echo -e "Version de Kernel:\t" $KERNEL
+	echo ""
 }
- os
+ 
+ function vga {
+	 
+	 VGA_CONTROLLER=$(lspci| grep "VGA" | cut -d: -f3)
+	 
+	 echo "vga"
+	 echo -e "Controlador VGA:\t" $VGA_CONTROLLER
+	 echo ""
+ }
+ 
+ function storage {
+	 DISK_C=($(lsblk | grep "sd" | tr -s ' ' | cut -d ' ' -f 4))
+	 for d in "${DISK_C[@]}"
+	 do
+		echo -e $d 
+		if [ "${d: -1}" == "G" ]
+		then
+			d="${d%?}"
+			d=$d*2
+		fi		
+		echo $d
+	done
+ }
 
+storage
 
