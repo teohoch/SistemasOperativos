@@ -1,0 +1,18 @@
+#WC-Exploratorio
+#!/bin/bash #
+
+
+error() {
+	echo "Error. Sintaxis de uso: ingrese directorio como parámetro"
+}
+
+
+if test $# -lt 1 # Si el número de parámetros posicionales o argumentos que se le dan al script es menor que 1, se corta el programa
+	then
+		error
+elif test ! -d $1 # Si el parámetro posicional "$1" existe y es un directorio.
+	then
+		echo "$1 no es un directorio."
+fi
+
+find "$1" -type f | xargs wc -l | tail -1 | grep -o -e "[0-9]*" > $(sed -e 's#/*$##' <<< "$1")".result"

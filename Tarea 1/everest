@@ -1,0 +1,90 @@
+#!/bin/bash
+
+function processor {
+	MODEL=$(cat /proc/cpuinfo | grep "model name" | sort -u | cut -d: -f2)
+	N_NUMBER=$(cat /proc/cpuinfo | grep "siblings" | sort -u | cut -d: -f2)
+	CACHE=$(cat /proc/cpuinfo | grep "cache size" | sort -u | cut -d: -f2)
+	ARCHITECTURE=$(uname -m)
+	VIRTUALIZATION='No'
+	if grep "vmx" /proc/cpuinfo > /dev/null
+	then
+		VIRTUALIZATION='Yes'
+	fi
+	if grep "svm" /proc/cpuinfo > /dev/null
+	then
+		VIRTUALIZATION='Yes'
+	fi
+	
+	echo processor
+	echo -e "Modelo:\t"$MODEL
+	echo -e "Número de Núcleos:\t"$N_NUMBER
+	echo -e "Memoria caché:\t"$CACHE
+	echo -e "Arquitectura del procesador:\t"$ARCHITECTURE 
+	echo -e "¿Soporta Virtualización:\t"$VIRTUALIZATION
+	echo ""
+}
+
+function memory {
+	RAM=$(grep "MemTotal" /proc/meminfo | cut -d: -f2)
+	SWAP=$(grep "SwapTotal" /proc/meminfo | cut -d: -f2)
+	FREE_RAM=$(grep "MemFree" /proc/meminfo | cut -d: -f2)
+	FREE_SWAP=$(grep "SwapFree" /proc/meminfo | cut -d: -f2)
+	
+	echo memory
+	echo -e "Memoria Total:\t"$RAM
+	echo -e "Swap Total:\t"$SWAP
+	echo -e "Memoria Libre:\t"$FREE_RAM
+	echo -e "Swap Libre:\t"$FREE_SWAP
+	echo ""
+}
+
+
+function newtcrk {
+	IFS=$'\n'	
+	NET=($(lspci | egrep -i 'network|ethernet'))
+	unset IFS
+	
+	echo "newtcrk"
+	for n in "${NET[@]}"
+	do 
+		echo ${n##*:}
+		
+	done
+	echo ""
+}
+
+function os {
+	echo "os"
+	OS=$(uname)
+	KERNEL=$(uname -r)
+	
+	echo -e "Sistema Operativo:\t" $OS
+	echo -e "Version de Kernel:\t" $KERNEL
+	echo ""
+}
+ 
+ function vga {
+	 
+	 VGA_CONTROLLER=$(lspci| grep "VGA" | cut -d: -f3)
+	 
+	 echo "vga"
+	 echo -e "Controlador VGA:\t" $VGA_CONTROLLER
+	 echo ""
+ }
+ 
+ function storage {
+	 DISK_C=($(lsblk | grep "sd" | tr -s ' ' | cut -d ' ' -f 4))
+	 for d in "${DISK_C[@]}"
+	 do
+		echo -e $d 
+		if [ "${d: -1}" == "G" ]
+		then
+			d="${d%?}"
+			d=$d*2
+		fi		
+		echo $d
+	done
+ }
+
+storage
+
