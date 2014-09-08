@@ -1,0 +1,7 @@
+
+memory
+Memoria Total:	 8088892 kB
+Swap Total:	 8788988 kB
+Memoria Libre:	 2979456 kB
+Swap Libre:	 8788988 kB
+

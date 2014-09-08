@@ -1,12 +1,13 @@
 #!/bin/bash
 
+
 function processor {
 	MODEL=$(cat /proc/cpuinfo | grep "model name" | sort -u | cut -d: -f2)
 	N_NUMBER=$(cat /proc/cpuinfo | grep "siblings" | sort -u | cut -d: -f2)
 	CACHE=$(cat /proc/cpuinfo | grep "cache size" | sort -u | cut -d: -f2)
 	ARCHITECTURE=$(uname -m)
 	VIRTUALIZATION='No'
-	if grep "vmx" /proc/cpuinfo > /dev/null
+	if grep "vmx" /proc/cpuinfo > /dev/null;
 	then
 		VIRTUALIZATION='Yes'
 	fi
@@ -15,13 +16,24 @@ function processor {
 		VIRTUALIZATION='Yes'
 	fi
 	
-	echo processor
-	echo -e "Modelo:\t"$MODEL
-	echo -e "Número de Núcleos:\t"$N_NUMBER
-	echo -e "Memoria caché:\t"$CACHE
-	echo -e "Arquitectura del procesador:\t"$ARCHITECTURE 
-	echo -e "¿Soporta Virtualización:\t"$VIRTUALIZATION
-	echo ""
+	if [ "$f" == "$true" ]
+	then
+		echo processor >> $p
+		echo -e "Modelo:\t"$MODEL >> $p
+		echo -e "Número de Núcleos:\t"$N_NUMBER >> $p
+		echo -e "Memoria caché:\t"$CACHE >> $p
+		echo -e "Arquitectura del procesador:\t"$ARCHITECTURE  >> $p
+		echo -e "¿Soporta Virtualización:\t"$VIRTUALIZATION >> $p
+		echo   >> $p
+	else
+		echo processor
+		echo -e "Modelo:\t"$MODEL
+		echo -e "Número de Núcleos:\t"$N_NUMBER
+		echo -e "Memoria caché:\t"$CACHE
+		echo -e "Arquitectura del procesador:\t"$ARCHITECTURE 
+		echo -e "¿Soporta Virtualización:\t"$VIRTUALIZATION
+		echo 
+	fi
 }
 
 function memory {
@@ -30,12 +42,22 @@ function memory {
 	FREE_RAM=$(grep "MemFree" /proc/meminfo | cut -d: -f2)
 	FREE_SWAP=$(grep "SwapFree" /proc/meminfo | cut -d: -f2)
 	
-	echo memory
-	echo -e "Memoria Total:\t"$RAM
-	echo -e "Swap Total:\t"$SWAP
-	echo -e "Memoria Libre:\t"$FREE_RAM
-	echo -e "Swap Libre:\t"$FREE_SWAP
-	echo ""
+	if [ "$f" == "$true" ]
+	then
+		echo memory  >> $p
+		echo -e "Memoria Total:\t"$RAM  >> $p
+		echo -e "Swap Total:\t"$SWAP  >> $p
+		echo -e "Memoria Libre:\t"$FREE_RAM  >> $p
+		echo -e "Swap Libre:\t"$FREE_SWAP  >> $p
+		echo   >> $p
+	else
+		echo memory
+		echo -e "Memoria Total:\t"$RAM
+		echo -e "Swap Total:\t"$SWAP
+		echo -e "Memoria Libre:\t"$FREE_RAM
+		echo -e "Swap Libre:\t"$FREE_SWAP
+		echo 
+	fi
 }
 
 
@@ -44,47 +66,131 @@ function newtcrk {
 	NET=($(lspci | egrep -i 'network|ethernet'))
 	unset IFS
 	
-	echo "newtcrk"
+	
 	for n in "${NET[@]}"
 	do 
-		echo ${n##*:}
-		
+		if [ "$f" == "$true" ]
+		then
+			echo "newtcrk"  >> $p
+			echo ${n##*:}  >> $p
+			echo >> $p
+		else		
+			echo "newtcrk"
+			echo ${n##*:}
+			echo
+		fi		
 	done
-	echo ""
+	 
 }
 
 function os {
-	echo "os"
+	
 	OS=$(uname)
 	KERNEL=$(uname -r)
 	
-	echo -e "Sistema Operativo:\t" $OS
-	echo -e "Version de Kernel:\t" $KERNEL
-	echo ""
+	if [ "$f" == "$true" ]
+	then
+		echo "os" >> $p
+		echo -e "Sistema Operativo:\t" $OS	  >> $p
+		echo -e "Version de Kernel:\t" $KERNEL	  >> $p
+	else	
+		echo "os"
+		echo -e "Sistema Operativo:\t" $OS
+		echo -e "Version de Kernel:\t" $KERNEL
+	fi
 }
  
  function vga {
 	 
 	 VGA_CONTROLLER=$(lspci| grep "VGA" | cut -d: -f3)
+	 D_CONTROLLER=$(lspci| grep "3D\|VGA" | cut -d: -f3)
 	 
-	 echo "vga"
-	 echo -e "Controlador VGA:\t" $VGA_CONTROLLER
-	 echo ""
+	 if [ "$f" == "$true" ]
+	 then
+		echo "vga"  >> $p
+		echo -e "Controlador VGA:\t" $VGA_CONTROLLER   >> $p
+		echo -e "Controlador  3D:\t" $D_CONTROLLER   >> $p
+		echo >> $p
+	else
+		echo "vga"
+		echo -e "Controlador VGA:\t" $VGA_CONTROLLER
+		echo -e "Controlador  3D:\t" $D_CONTROLLER
+		echo 
+	 fi
  }
  
  function storage {
-	 DISK_C=($(lsblk | grep "sd" | tr -s ' ' | cut -d ' ' -f 4))
-	 for d in "${DISK_C[@]}"
-	 do
-		echo -e $d 
-		if [ "${d: -1}" == "G" ]
-		then
-			d="${d%?}"
-			d=$d*2
-		fi		
-		echo $d
+	DISK_C=($(lsblk -b | grep "disk" | tr -s ' ' | cut -d ' ' -f 4))
+	TOTAL_STORAGE=0
+	for d in "${DISK_C[@]}"
+	do
+		TOTAL_STORAGE=$((TOTAL_STORAGE+d))		
 	done
+	TOTAL_STORAGE=$(numfmt --to=iec-i  $TOTAL_STORAGE)
+	
+	TOTAL_AVALIBLE=$(df --total | grep "total" | tr -s ' ' | cut -d ' ' -f 4)	
+	TOTAL_AVALIBLE=$((TOTAL_AVALIBLE*1024))
+	TOTAL_AVALIBLE=$(numfmt --to=iec-i  $TOTAL_AVALIBLE)
+	
+	if [ "$f" == "$true" ]
+	then
+		echo "storage"  >> $p
+		echo -e "Espacio  Total: \t" $TOTAL_STORAGE  >> $p
+		echo -e "Espacio Disponible:\t" $TOTAL_AVALIBLE  >> $p
+		echo >> $p
+	else
+		echo "storage"
+		echo -e "Espacio  Total: \t" $TOTAL_STORAGE
+		echo -e "Espacio Disponible:\t" $TOTAL_AVALIBLE
+		echo 
+	fi
+	
+	
  }
+ 
+f=''
+p=""
+true='T'
 
-storage
+if [[ $@ == *-f* ]]
+then
+	
+	par=$@
+	f="T"
+	r=${par##*-f}
+	p=$( echo "$r" |cut -d " " -f2 )
+	echo > $p
+fi
+
+if [[ $@ == *-a* ]]
+then
+	processor
+	memory
+	newtcrk
+	storage
+	vga
+	os
+else
+	if [[ $@ == *processor* ]]
+	then
+		processor	
+	elif [[ $@ == *memory* ]]
+	then
+		memory
+	elif [[ $@ == *newtcrk* ]]
+	then
+		newtcrk
+	elif [[ $@ == *storage* ]]
+	then
+		storage
+	elif [[ $@ == *vga* ]]
+	then
+		vga
+	elif [[ $@ == *os* ]]
+	then
+		os
+	fi		
+fi
+
+
 
