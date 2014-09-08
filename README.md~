@@ -10,9 +10,6 @@ Supuestos : Se presupone que los comandos UNIX tipicos estan disponibles dentro 
 
 Archivos y carpetas: El archivo que contiene el código para esta pregunta se llama "everest", sin terminación en ".sh". Es necesario darle permisos antes de correrlo en consola, utilizando "chmod u+x everest".
 
-Explicación de la estrategia: Se generaron multiples funciones, cada una orientada a la extraccion de alguna informacion. De esta manera
-la funcion os obtiene la informacion respectiva al sistema operativo y la funcion memory a la memoria RAM y SWAP, y asi con cada una. Todas estas funcionas funcionan utilizando combinaciones de greps y cuts a archivos y comandos del sistema
-
 Pregunta 2: wc-exploratorio
 
 Supuestos : Se supone una estructura de árbol finita, es decir, una anidación de carpetas numerable con una cantidad finita de archivos también. Además, se supone permisible el uso de funciones y comandos básicos de UNIX, uso de expresiones regulares y funciones pre-definidas.
