@@ -1,0 +1,84 @@
+\documentclass[spanish, fleqn]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{wasysym}
+\usepackage[colorlinks, urlcolor=blue]{hyperref}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2cm, right = 2cm]{geometry}
+\usepackage{listings}
+\lstset{
+  frame=tb,
+  language=C++,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+
+
+\title{Sistemas Operativos \\
+       Tarea \#2
+      }
+
+\author{Fabián Viani Gonzalez \\
+	201003048-2\\
+	Teodoro Hochfärber\\
+	201173039-9
+       }
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\textbf{\Large{README:}}\\
+\begin{enumerate}
+ \item Supuestos:
+ Se presuponen los elementos establecidos en la definicion de la tarea.
+ \item Archivos y Carpetas:
+ Se entregan 4 archivos:
+ \begin{enumerate}
+  \item \textbf{main.cpp:} Este archivo contiene el codigo fuente correspondiente a la tarea.
+  \item \textbf{Makefile:} Este archivo contiene las intrucciones de compilacion. Contiene 4 targets: \emph{tarea2}, el cual compila el codigo fuente,
+  \emph{clean}, el cual elimina los archivos generados por la compilacion, \emph{mop} el cual elimina los archivos *.o dejados por la compilacion.
+  Por ultimo tenemos \emph{run} el cual corre el programa una vez compilado. Por default, se ejecutan los siguientes targets: \emph{tarea2 mop run}, en ese orden.
+  \item \textbf{tarea2SO.tex:} Codigo fuente del presente informe. Debe ser compilado por herramientas LaTeX.
+  \item \textbf{tarea2SO.pdf:} Informe compilado y presentable.
+ \end{enumerate}
+
+ \item Explicación de la Estrategia: \\
+ En primer lugar, se establece un Signa Handler para permitir el manejo de señales. Creandolo antes de la creacion de nuevos procesos, nos aseguramos que todos tengan este Handler establecido. En segundo lugar, se generaron los procesos hijos nesesarios a partir de un loop que utiliza un fork.  Esto, acompañado de un condicional, nos permite generar multiples procesos, todos descendencia directa del proceso principal. Una vez creados, se les deja en un loop infinito, a la espera de una señal desde el proceso padre. Cuando todos los procesos han sido creados, en el proceso padre se establece que señal se utilizara para llamar a los hijos. Se genera una llamada a todos los procesos que comparten PID de grupo con el proceso padre, incluyendo tambien una instruccion para que el proceso padre ignore la señal, mediante
+ \begin{lstlisting}
+  signal(SIGINT, SIG_IGN);
+  kill(0, SIGINT);
+ \end{lstlisting}
+ 
+ Justo antes de enviar la señal, se guarda el valor del tiempo presente, de forma de poder conocer el instante en el cual comienza la carrera.Una vez enviada la señal, cada proceso ejecuta el signal Handler establecido. Este los hace esperar 10 segundos, para despues guardar su tiempo de termino dentro de un pipe establecido en el proceso padre, avisando por pantalla el final de su ejecucion, para luego terminar esta. Mientras los procesos hijos hacen esto, el proceso padre espera a que terminen para poder continuar con su propia ejecución. Una vez sucede esto, el padre accede al pipe y lee los datos en este guardados. A partir de estos, muestra el tiempo en el cual cada proceso o ``Pony'' termino su carrera. Una vez echo esto, el programa termina.
+\end{enumerate}
+
+\textbf{\Large{Respuestas:}}
+\begin{enumerate}
+
+ \item
+   Si cambian en su orden de llegada, esto se debe a que el Sistema operativo no posee una priorización sincrónica para los procesos ni los threads. Estos son programas secuenciales en donde su velocidad es variable, solo el scheduler reconoce esta información.  
+ \item
+   El orden de los resultados mostrados por el Juez varía aún más. Esta vez es por un tema de recursos. En concurrencia, los distintos proceso e hilos en ejecución comparten los mismos recursos, que sumados a otros utilizan el tiempo de procesamiento. A la hora de abrir y cerrar programas, se están cambiando los estados de los distintos hilos y procesos (creación, asignación, bloqueo) que conllevan un cambio también en la asignación de recursos, por lo que el orden de llegada de cada ``pony'' llega a diferir más uno de otro.   
+ \item
+  La idea de realizar la espera de los 3 segundos, es que se alcance a realizar la creación de todos los procesos (ponys), para que de esta forma, el primer ``pony'' en crearse no inicie la carrera cuando el último pony aún no es creado. No podriamos decir a ciencia cierta que soluciona totalmente este problema, ya que no somos el scheduler y no conocemos la cantidad de tiempo de creación (no podemos saberlo con certeza, depende del equipo).
+ 
+
+ 
+  \end{enumerate}
+
+\thispagestyle{empty}
+
+\end{document}
