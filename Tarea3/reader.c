@@ -2,13 +2,14 @@
 #include <stdlib.h>
 #define MAX 50
 
+int *GlobalTemp;
 
 void mergeSort(int arr[],int low,int mid,int high);
 void partition(int arr[],int low,int high);
 
 int main(){
 	
-	char nombre[]="data.txt";
+	char nombre[]="data_50000000.txt";
 	FILE *file;	
 	
 	file = fopen( nombre, "r" );
@@ -41,6 +42,8 @@ int main(){
 	rewind(file);
 	char *buffer = (char*) malloc(sizeof(char) * count); // allocate buffer.
 	int *data = (int*) malloc(sizeof(int) * comas);
+	GlobalTemp = (int*) malloc(sizeof(int) * comas);
+	
 	ch = '1';
 	int length = 0;
 	while ((ch != '\n') && (ch != EOF)) {		
@@ -100,11 +103,14 @@ int main(){
 	free(buffer);
 	fclose(file);
 	
+	partition(data, 0, comas-1);
+	
+	
 	int p;
-	for(p=0; p<comas;p++)
+	/*for(p=0; p<comas;p++)
 	{
-		printf("%d \n",data[p]);
-	}
+		printf(" numero: %d \n",data[p]);
+	}*/
 	
 	
 	
@@ -118,5 +124,59 @@ int main(){
 	
 	
 	
+	
+	free(GlobalTemp);
 	return 0;
 };
+
+void partition(int arr[],int low,int high){
+
+    int mid;
+
+    if(low<high){
+         mid=(low+high)/2;
+         partition(arr,low,mid);
+         partition(arr,mid+1,high);
+         mergeSort(arr,low,mid,high);
+    }
+}
+
+void mergeSort(int arr[],int low,int mid,int high){	
+	
+	int i,m,k,l;
+
+    l=low;
+    i=low;
+    m=mid+1;
+
+    while((l<=mid)&&(m<=high)){
+
+         if(arr[l]<=arr[m]){
+             GlobalTemp[i]=arr[l];
+             l++;
+         }
+         else{
+             GlobalTemp[i]=arr[m];
+             m++;
+         }
+         i++;
+    }
+
+    if(l>mid){
+         for(k=m;k<=high;k++){
+             GlobalTemp[i]=arr[k];
+             i++;
+         }
+    }
+    else{
+         for(k=l;k<=mid;k++){
+             GlobalTemp[i]=arr[k];
+             i++;
+         }
+    }
+   
+    for(k=low;k<=high;k++){
+         arr[k]=GlobalTemp[k];
+    }
+    
+}
