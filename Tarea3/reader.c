@@ -7,125 +7,99 @@ int *GlobalTemp;
 void mergeSort(int arr[],int low,int mid,int high);
 void partition(int arr[],int low,int high);
 
-int main(){
+int main(int argc, char *argv[]){
 	
-	char nombre[]="data_50000000.txt";
-	FILE *file;	
-	
-	file = fopen( nombre, "r" );
+	if ( argc != 2 ) /* argc should be 2 for correct execution */
+    {
+        /* We print argv[0] assuming it is the program name */
+        printf( "usage: %s filename", argv[0] );
+    }
+    else 
+		{	
+		
+		FILE *file;	
+		
+		file = fopen( argv[1], "r" );
 
-	int count = 0; 
-	int comas = 1;
+		int count = 0; 
+		int comas = 1;
 
-	char ch;
-	ch = '1';
-	
-	while ((ch != '\n') && (ch != EOF)) 
-	{	
-		if (ch==','){
-			comas++;
-			//printf("Numeros Leidos %d \n", comas);
+		char ch;
+		ch = '1';
+		
+		while ((ch != '\n') && (ch != EOF)) 
+		{	
+			if (ch==','){
+				comas++;
+			}	
+			ch = getc(file); // read from stream.		
+			count++;		
 		}	
-		ch = getc(file); // read from stream.
+		rewind(file);
+		char *buffer = (char*) malloc(sizeof(char) * count); // allocate buffer.
+		int *data = (int*) malloc(sizeof(int) * comas);
+		GlobalTemp = (int*) malloc(sizeof(int) * comas);
 		
-		count++;
-		//printf("Elementos Leidos %d \n", count);
+		ch = '1';
+		int length = 0;
+		while ((ch != '\n') && (ch != EOF)) {		
+			ch = getc(file); // read from stream.
+			buffer[length] = ch;
+			count++;
+			length++;
+		}	
 		
-	}
-	
-	
-	
-	printf("Elementos Leidos %d \n", count);
-	printf("Numeros Leidos %d \n", comas);
-	
-	//int data[comas];
-	rewind(file);
-	char *buffer = (char*) malloc(sizeof(char) * count); // allocate buffer.
-	int *data = (int*) malloc(sizeof(int) * comas);
-	GlobalTemp = (int*) malloc(sizeof(int) * comas);
-	
-	ch = '1';
-	int length = 0;
-	while ((ch != '\n') && (ch != EOF)) {		
-		ch = getc(file); // read from stream.
-		buffer[length] = ch;
-		count++;
-		length++;
-	}
-	
-	//int array[comas];
-	
-	int position = 0;
-	char current;
-	current = '1';
-	int posdata = 0;
-		
-	while((current != '\n') && (current != EOF) )
-	{
-		char temp [100];
-		int size = 0;		
-		
-		current = buffer[position];		
-		
-		while(current != ',' &&(current != '\n') && (current != EOF))
-		{			
-			if (current!= ' ')
-			{
-				temp[size] = current;
-				size++;
+		int position = 0;
+		char current;
+		current = '1';
+		int posdata = 0;
+			
+		while((current != '\n') && (current != EOF) )
+		{
+			char temp [100];
+			int size = 0;		
+			
+			current = buffer[position];		
+			
+			while(current != ',' &&(current != '\n') && (current != EOF))
+			{			
+				if (current!= ' ')
+				{
+					temp[size] = current;
+					size++;
+				}
+				position++;
+				current = buffer[position];							
 			}
-			position++;
-			current = buffer[position];							
+			// convert to int
+			char litleTemp[size];
+			int k;
+			int numero;
+			for(k = 0; k<size;k++)
+			{
+				litleTemp[k] = temp[k];			
+			}		
+			sscanf(litleTemp, "%d", &numero);		
+			
+			for(k = 0; k<size;k++)
+			{
+				litleTemp[k] = NULL;
+			}	
+			data[posdata] = numero;
+			posdata++;			
+			position++;		
+							
 		}
-		// convert to int
-		char litleTemp[size];
-		int k;
-		int numero;
-		for(k = 0; k<size;k++)
-		{
-			litleTemp[k] = temp[k];			
-		}		
-		sscanf(litleTemp, "%d", &numero);
-		//printf("tamaño: %d \n", size);
-		//printf("Numero: %d \n", numero);
 		
-		for(k = 0; k<size;k++)
-		{
-			litleTemp[k] = NULL;
-		}	
-		data[posdata] = numero;
-		posdata++;			
-		position++;			
-						
+		
+		free(buffer);
+		fclose(file);
+		printf("Iniciando Ordenamiento...\n");
+		partition(data, 0, comas-1);
+		printf("Ordenamiento Finalizado.");
+		
+		free(GlobalTemp);
 	}
-	
-	
-	free(buffer);
-	fclose(file);
-	
-	partition(data, 0, comas-1);
-	
-	
-	int p;
-	/*for(p=0; p<comas;p++)
-	{
-		printf(" numero: %d \n",data[p]);
-	}*/
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	free(GlobalTemp);
 	return 0;
 };
 
