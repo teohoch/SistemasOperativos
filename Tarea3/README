@@ -1,0 +1,14 @@
+Readme
+
+Tarea basada en la Simple thread API, utilizando una version modificada del BBQ dada en por el profesor cañas, de forma de poder guardar una estructura propia, ademas de agregarle la capacidad de escribir a un archivo al remover un elemento.
+
+La estructura propia utilizada se llama Job, y esta definida en Job.h y Job.cc. Consiste de un entero y un entero largo sin signo.
+
+Se utiliza una cola para guardar "Job", los cuales al ser removidos de la cola, automaticamente son escritos al log.txt
+
+Archivo Modificados:
+	main.cc
+	Job.h
+	Job.cc
+	BBQ.h
+	BBQ.cc
