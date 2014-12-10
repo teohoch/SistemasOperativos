@@ -20,7 +20,8 @@ int main(int argc, char **argv)
 {
   BBQ *queues[3];
   sthread_t workers[3];
-  int ii, jj, ret;
+  int ii, jj;
+  
 
   // Start the worker threads
   for(ii = 0; ii < 3; ii++){
@@ -33,8 +34,8 @@ int main(int argc, char **argv)
   for(ii = 0; ii < 3; ii++){
     printf("Queue %d:\n", ii);
     for(jj = 0; jj < 20; jj++){
-      ret = queues[ii]->remove();
-      printf("Got %d\n", ret);
+      Job Valores = queues[ii]->remove();
+      printf("Got %d\n", Valores.getValue());
     }
   }
 }

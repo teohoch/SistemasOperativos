@@ -6,6 +6,7 @@
 #include <pthread.h>
 #include "Lock.h"
 #include "Cond.h"
+#include "Job.h"
 
 const int MAX = 10;
 
@@ -27,7 +28,7 @@ class BBQ{
   BBQ();
   ~BBQ() {};
   void insert(int item);
-  int remove();
+  Job remove();
 
  private:
   // Private methods are called with lock already held

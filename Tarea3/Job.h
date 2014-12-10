@@ -1,15 +1,18 @@
 #ifndef _JOB_
 #define _JOB_
-Class Job
-{
+
+class Job{
 	private:
 		int value;
 		int id;
 	public:
-		Job(int value, int id);
+		Job();
 		~Job(){};
 		int getValue();
 		int getId();
-}
+		void setValue(int value);
+		void setId(int id);
+};
+
 
 #endif

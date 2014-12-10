@@ -1,10 +1,8 @@
 
 #include "Job.h"
 
-Job::Job(int value, int id)
-{
-	this->value = value;
-	this->id = id;
+Job::Job()
+{	
 }
 
 int Job::getValue()
@@ -15,4 +13,14 @@ int Job::getValue()
 int Job::getId()
 {
 	return this->id;
-}git
+}
+
+void Job::setValue(int value)
+{
+	this->value = value;
+}
+
+void Job::setId(int id)
+{
+	this->id = id;
+}
