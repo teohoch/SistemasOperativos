@@ -15,4 +15,4 @@ int Job::getValue()
 int Job::getId()
 {
 	return this->id;
-}
+}git
