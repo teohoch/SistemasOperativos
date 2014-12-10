@@ -10,7 +10,7 @@ int Job::getValue()
 	return this->value;
 }
 
-int Job::getId()
+unsigned long int Job::getId()
 {
 	return this->id;
 }
@@ -20,7 +20,7 @@ void Job::setValue(int value)
 	this->value = value;
 }
 
-void Job::setId(int id)
+void Job::setId(unsigned long int id)
 {
 	this->id = id;
 }

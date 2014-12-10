@@ -19,6 +19,6 @@ lock.o: Lock.cc Lock.h
 	$(CC) $(CFLAGS) Lock.cc -o lock.o
 
 clean:
-	rm -rf *.o *.out Tarea3
+	rm -rf *.o *.out *.h.gch *.txt Tarea3
 mop:
 	rm -rf *.o *.h.gch

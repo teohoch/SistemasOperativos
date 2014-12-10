@@ -4,14 +4,14 @@
 class Job{
 	private:
 		int value;
-		int id;
+		unsigned long int id;
 	public:
 		Job();
 		~Job(){};
 		int getValue();
-		int getId();
+		unsigned long int getId();
 		void setValue(int value);
-		void setId(int id);
+		void setId(unsigned long int id);
 };
 
 

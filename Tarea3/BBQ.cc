@@ -17,7 +17,7 @@ BBQ::BBQ()
 
 // Wait until there is room 
 // then insert an item.
-void BBQ::insert(int item)
+void BBQ::insert(Job item)
 {
 	lock.Acquire();
 
@@ -39,7 +39,7 @@ void BBQ::insert(int item)
 // then remove an item.
 Job BBQ::remove(void)
 {
-	int ret;
+	Job ret;
 	lock.Acquire();
 	  
 	while(isEmpty())
@@ -53,15 +53,13 @@ Job BBQ::remove(void)
 	
 	
 	std::ofstream outfile;
-	outfile.open("test.txt", std::ios_base::app);
-	outfile << "El procesador "<<pthread_self()<< " imprimio el job "<< jobNumber << " demorandose " << ret << " segundos \n"; 
+	outfile.open("log.txt", std::ios_base::app);
+	outfile << "El procesador "<< ret.getId()<< " imprimio el job "<< jobNumber << " demorandose " << ret.getValue() << " segundos \n"; 
 	
-	Job retorno;
-	retorno.setValue(ret);
-	retorno.setId(jobNumber);
+	
 	jobNumber++;
 
 	itemRemoved.Signal(&lock);
 	lock.Release();
-	return retorno;
+	return ret;
 }

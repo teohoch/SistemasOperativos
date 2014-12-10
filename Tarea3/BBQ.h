@@ -18,7 +18,7 @@ class BBQ{
   Cond itemRemoved;
 
   // State variables
-  int items[MAX];
+  Job items[MAX];
   int nFull;
   int firstFull;
   int nextEmpty;
@@ -27,7 +27,7 @@ class BBQ{
  public: 
   BBQ();
   ~BBQ() {};
-  void insert(int item);
+  void insert(Job item);
   Job remove();
 
  private:
