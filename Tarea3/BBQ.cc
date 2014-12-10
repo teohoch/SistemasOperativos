@@ -10,6 +10,7 @@ BBQ::BBQ()
   nFull = 0;
   firstFull = 0;
   nextEmpty = 0;
+  jobNumber = 0;
 }
 
 // Wait until there is room 

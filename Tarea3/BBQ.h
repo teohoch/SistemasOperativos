@@ -21,6 +21,7 @@ class BBQ{
   int nFull;
   int firstFull;
   int nextEmpty;
+  int jobNumber;
 
  public: 
   BBQ();
