@@ -3,6 +3,8 @@
  */
 #include <assert.h>
 #include <pthread.h>
+#include <fstream>
+#include <sys/types.h>
 #include "BBQ.h"
 
 BBQ::BBQ()
@@ -48,6 +50,11 @@ Job BBQ::remove(void)
 	ret = items[firstFull];
 	nFull--;
 	firstFull = (firstFull + 1) % MAX;
+	
+	
+	std::ofstream outfile;
+	outfile.open("test.txt", std::ios_base::app);
+	outfile << "El procesador "<<pthread_self()<< " imprimio el job "<< jobNumber << " demorandose " << ret << " segundos \n"; 
 	
 	Job retorno;
 	retorno.setValue(ret);
